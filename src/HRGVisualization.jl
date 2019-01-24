@@ -112,7 +112,7 @@ function to_dot(hg::HRGrammarRules)
 end
 
 function test()
-    println("Hello HRG and World ")
+    println("Hello HRG and dev World ")
 end
 
 end
