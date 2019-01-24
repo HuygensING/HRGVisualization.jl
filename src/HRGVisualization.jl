@@ -14,7 +14,7 @@ julia>
 module HRGVisualization
     export to_dot
 
-    @include "types.jl" # the type definitions should come from the main HRG module
+    include("types.jl") # the type definitions should come from the main HRG module
 
     function to_dot(he::HyperEdge)
         source = ""
