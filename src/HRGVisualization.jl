@@ -23,8 +23,10 @@ function to_dot(he::HyperEdge)
     source = ""
     source_vars = String[]
     for (i,s) in enumerate(he.source)
-        shape = node_shape(s)
-        line = """    s$i[shape=$shape;label="";xlabel="$s";fontsize=10]"""
+        shape = _node_shape(s)
+        line = """
+            s$i[shape=$shape;label="";xlabel="$s";fontsize=10]
+        """
         source = source * line
         push!(source_vars,"s$i")
     end
@@ -33,8 +35,10 @@ function to_dot(he::HyperEdge)
     target = ""
     target_vars = String[]
     for (i,t) in enumerate(he.target)
-        shape = node_shape(t)
-        line = """    t$i[shape=$shape;label="";xlabel="$t";fontsize=10]"""
+        shape = _node_shape(t)
+        line = """
+            t$i[shape=$shape;label="";xlabel="$t";fontsize=10]
+        """
         target = target * line
         push!(target_vars,"t$i")
     end
@@ -45,23 +49,25 @@ function to_dot(he::HyperEdge)
         rankdir=LR
         labelloc=b
         color=white
+        edge [arrowsize=0.5]
         $source
         he[shape=box;label="$(he.label)"]
         $target
-        {$sv} -> he -> {$tv} [arrowsize=0.5]
+        {$sv} -> he -> {$tv}
     }
     """
     return dot
 end
 
 function to_dot(hg::HyperGraph)
-    hypergraph = hypergraph_as_dot(hg)
+    hypergraph = _hypergraph_as_dot(hg)
 
     dot = """
     digraph HyperGraph {
         rankdir=LR
         labelloc=b
         color=white
+        edge [arrowsize=0.5]
         $hypergraph
     }
     """
@@ -73,7 +79,7 @@ function to_dot(rules::HRGrammarRules)
 
     for (i,lhs) in enumerate(reverse(collect(keys(rules))))
         rhs = rules[lhs]
-        hypergraph = hypergraph_as_dot(rhs,"rule_$(i)_")
+        hypergraph = _hypergraph_as_dot(rhs,"rule_$(i)_")
 
         cluster = """
         subgraph cluster_$i {
@@ -87,21 +93,22 @@ function to_dot(rules::HRGrammarRules)
     dot = """
     digraph HRG_Rules {
         rankdir=LR
-
-        //replacement hypergraphs
+        edge [arrowsize=0.5]
         $replacements
     }
     """
     return dot
 end
 
-function hypergraph_as_dot(hg::HyperGraph, prefix::String="")
+function _hypergraph_as_dot(hg::HyperGraph, prefix::String="")
     hyperedges = ""
     node_vars = Dict{Node,String}()
     node_set = Set()
     for (i,he) in enumerate(hg)
         map(n -> push!(node_set,n), vcat(he.source,he.target))
-        line = """    $(prefix)he$i[shape=box;label="$(he.label)"]"""
+        line = """
+            $(prefix)he$i[shape=box;label="$(he.label)"]
+        """
         hyperedges = hyperedges * line
     end
 
@@ -110,8 +117,10 @@ function hypergraph_as_dot(hg::HyperGraph, prefix::String="")
     for (i,n) in enumerate(sort(collect(node_set)))
         var = "$(prefix)n$i"
         node_vars[n] = var
-        shape = node_shape(n)
-        line = """    $var[shape=$shape;label="";xlabel="$n";fontsize=10]"""
+        shape = _node_shape(n)
+        line = """
+            $var[shape=$shape;label="";xlabel="$n";fontsize=10]
+        """
         nodes = nodes * line
     end
 
@@ -123,7 +132,9 @@ function hypergraph_as_dot(hg::HyperGraph, prefix::String="")
         target_vars = [node_vars[t] for t in he.target]
         tv = join(target_vars,",")
 
-        line = """    {$sv} -> $(prefix)he$i -> {$tv} [arrowsize=0.5]"""
+        line = """
+            {$sv} -> $(prefix)he$i -> {$tv}
+        """
         edges = edges * line
     end
 
@@ -137,7 +148,7 @@ function hypergraph_as_dot(hg::HyperGraph, prefix::String="")
     """
 end
 
-function node_shape(label::String)
+function _node_shape(label::String)
     return label == "_" ? "circle;width=0.05" : "point"
 end
 
