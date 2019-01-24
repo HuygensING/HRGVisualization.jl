@@ -12,7 +12,7 @@ julia>
 ```
 """
 module HRGVisualization
-    export to_dot
+    export to_dot, HRGrammarRules, HyperEdge, test
 
     include("types.jl") # the type definitions should come from the main HRG module
 
@@ -108,6 +108,10 @@ module HRGVisualization
         dot = """
         Hello Rules
         """
+    end
+
+    function test()
+        println("Hello HRG World")
     end
 
 end

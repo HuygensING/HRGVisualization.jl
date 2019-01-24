@@ -1,6 +1,6 @@
 using HRGVisualization
 
-function test1
+function test1()
     he1 = HyperEdge("S", ["1"], ["2"])
     he_dot = to_dot(he1)
     println(he_dot)
@@ -26,3 +26,5 @@ function test1
     rules_dot = to_dot(rules)
     println(rules_dot)
 end
+
+test1()
