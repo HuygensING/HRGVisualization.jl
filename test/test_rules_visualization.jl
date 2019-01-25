@@ -21,48 +21,40 @@ include("util.jl")
     expected = """
     digraph HRG_Rules {
         rankdir=LR
-        //replacement hypergraphs
+        edge [arrowsize=0.5]
         subgraph cluster_1 {
-            label="LOVES ⇒"
-            // nodes
-            rule_1_n1[shape=point;label="";xlabel="4";fontsize=10]
-            rule_1_n2[shape=circle;width=0.05;label="";xlabel="_";fontsize=10]
-            // hyper-edges
-            rule_1_he1[shape=box;label="loves"]
-            rule_1_he2[shape=box;label="MARY"]
-            // edges
-            {rule_1_n2} -> rule_1_he1 -> {rule_1_n1} [arrowsize=0.5]
-            {rule_1_n1} -> rule_1_he2 -> {rule_1_n2} [arrowsize=0.5]
+            label="JOHN ⇒"
+            rule1_n1[shape=point;label="";xlabel="3";fontsize=10]
+            rule1_n2_1[shape=circle;width=0.05;label=""]
+            rule1_n2_2[shape=circle;width=0.05;label=""]
+            rule1_he1[shape=box;label="John"]
+            rule1_he2[shape=box;label="LOVES"]
+            {rule1_n2_1} -> rule1_he1 -> {rule1_n1}
+            {rule1_n1} -> rule1_he2 -> {rule1_n2_2}
         }
         subgraph cluster_2 {
-            label="MARY ⇒"
-            // nodes
-            rule_2_n1[shape=circle;width=0.05;label="";xlabel="_";fontsize=10]
-            // hyper-edges
-            rule_2_he1[shape=box;label="Mary"]
-            // edges
-            {rule_2_n1} -> rule_2_he1 -> {rule_2_n1} [arrowsize=0.5]
+            label="LOVES ⇒"
+            rule2_n1[shape=point;label="";xlabel="4";fontsize=10]
+            rule2_n2_1[shape=circle;width=0.05;label=""]
+            rule2_n2_2[shape=circle;width=0.05;label=""]
+            rule2_he1[shape=box;label="loves"]
+            rule2_he2[shape=box;label="MARY"]
+            {rule2_n2_1} -> rule2_he1 -> {rule2_n1}
+            {rule2_n1} -> rule2_he2 -> {rule2_n2_2}
         }
         subgraph cluster_3 {
-            label="JOHN ⇒"
-            // nodes
-            rule_3_n1[shape=point;label="";xlabel="3";fontsize=10]
-            rule_3_n2[shape=circle;width=0.05;label="";xlabel="_";fontsize=10]
-            // hyper-edges
-            rule_3_he1[shape=box;label="John"]
-            rule_3_he2[shape=box;label="LOVES"]
-            // edges
-            {rule_3_n2} -> rule_3_he1 -> {rule_3_n1} [arrowsize=0.5]
-            {rule_3_n1} -> rule_3_he2 -> {rule_3_n2} [arrowsize=0.5]
+            label="MARY ⇒"
+            rule3_n1_1[shape=circle;width=0.05;label=""]
+            rule3_n1_2[shape=circle;width=0.05;label=""]
+            rule3_he1[shape=box;label="Mary"]
+            {rule3_n1_1} -> rule3_he1 -> {rule3_n1_2}
         }
         subgraph cluster_4 {
             label="S ⇒"
-            // nodes
-            rule_4_n1[shape=circle;width=0.05;label="";xlabel="_";fontsize=10]
-            // hyper-edges
-            rule_4_he1[shape=box;label="JOHN"]
-            // edges
-            {rule_4_n1} -> rule_4_he1 -> {rule_4_n1} [arrowsize=0.5]
+            rule4_n1_1[shape=circle;width=0.05;label=""]
+            rule4_n1_2[shape=circle;width=0.05;label=""]
+            rule4_he1[shape=box;label="JOHN"]
+            {rule4_n1_1} -> rule4_he1 -> {rule4_n1_2}
         }
     }
     """

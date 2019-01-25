@@ -12,10 +12,11 @@ include("util.jl")
         rankdir=LR
         labelloc=b
         color=white
+        edge [arrowsize=0.5]
         s1[shape=point;label="";xlabel="1";fontsize=10]
         he[shape=box;label="S"]
         t1[shape=point;label="";xlabel="2";fontsize=10]
-        {s1} -> he -> {t1} [arrowsize=0.5]
+        {s1} -> he -> {t1}
     }
     """
     _test_normalized_strings_are_equal(he_dot,expected)
@@ -28,12 +29,13 @@ include("util.jl")
         rankdir=LR
         labelloc=b
         color=white
+        edge [arrowsize=0.5]
         s1[shape=point;label="";xlabel="1";fontsize=10]
         s2[shape=point;label="";xlabel="3";fontsize=10]
         he[shape=box;label="X"]
         t1[shape=point;label="";xlabel="2";fontsize=10]
         t2[shape=point;label="";xlabel="4";fontsize=10]
-        {s1,s2} -> he -> {t1,t2} [arrowsize=0.5]
+        {s1,s2} -> he -> {t1,t2}
     }
     """
     _test_normalized_strings_are_equal(he_dot,expected)
@@ -51,8 +53,6 @@ include("util.jl")
         labelloc=b
         color=white
         edge [arrowsize=0.5]
-
-        // nodes
         n1[shape=point;label="";xlabel="1";fontsize=10]
         n2[shape=point;label="";xlabel="2";fontsize=10]
         n3[shape=point;label="";xlabel="3";fontsize=10]
@@ -61,14 +61,10 @@ include("util.jl")
         n6[shape=point;label="";xlabel="6";fontsize=10]
         n7[shape=point;label="";xlabel="7";fontsize=10]
         n8[shape=point;label="";xlabel="8";fontsize=10]
-
-        // hyper-edges
         he1[shape=box;label="S"]
         he2[shape=box;label="X"]
         he3[shape=box;label="Y"]
         he4[shape=box;label="Z"]
-
-        // edges
         {n1} -> he1 -> {n2}
         {n1,n3} -> he2 -> {n2,n4}
         {n2,n4} -> he3 -> {n5}

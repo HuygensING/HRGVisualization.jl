@@ -6,7 +6,8 @@ all_tests.jl:
 =#
 using Test
 
-@testset begin
+@testset "all tests" begin
     include("test_hypergraph_visualization.jl")
     include("test_rules_visualization.jl")
+    include("test_hypergraph_external_nodes_count.jl")
 end
