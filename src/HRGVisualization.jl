@@ -15,7 +15,8 @@ module HRGVisualization
 
 export to_dot,
        HRGrammarRules,
-       HyperEdge
+       HyperEdge,
+       HyperGraph
 
 include("types.jl") # the type definitions should come from the main HRG module
 
@@ -79,7 +80,8 @@ end
 function to_dot(rules::HRGrammarRules)
     replacements_buf = IOBuffer()
 
-    for (i,lhs) in enumerate(sort(collect(keys(rules))))
+    ordered_keys = reverse(_order_keys(rules))
+    for (i,lhs) in enumerate(ordered_keys)
         rhs = rules[lhs]
         hypergraph = _hypergraph_as_dot(rhs,"rule$(i)_")
 
@@ -182,9 +184,7 @@ function _hypergraph_as_dot(hg::HyperGraph, prefix::String="")
     return dot
 end
 
-function _node_shape(label::String)
-    return label == "_" ? "" : "point"
-end
+_node_shape(label::String) = label == "_" ? "" : "point"
 
 function _external_node_count(hg::HyperGraph)
     nodes = String[]
@@ -193,5 +193,21 @@ function _external_node_count(hg::HyperGraph)
     end
     return count(n -> (n == "_"), nodes)
 end
+
+_order_keys(rules::HRGrammarRules) = _process_nonterminal("S",String[],rules)
+
+function _process_nonterminal(nonterminal::String, keys::Array{String}, rules::HRGrammarRules)
+    push!(keys,nonterminal)
+    for nt in _get_nonterminals(rules[nonterminal])
+        if !(nt in keys)
+            keys = _process_nonterminal(nt,keys,rules)
+        end
+    end
+    return keys
+end
+
+_get_nonterminals(hg::HyperGraph) = [he.label for he in hg if _is_nonterminal(he.label)]
+
+_is_nonterminal(s::String) = all(c->isuppercase(c), s)
 
 end

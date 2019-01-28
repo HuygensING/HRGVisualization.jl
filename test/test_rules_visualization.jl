@@ -11,26 +11,42 @@ include("util.jl")
 
 @testset "rules_visualization" begin
     using HRGVisualization
-    rules = HRGrammarRules(
-        "S" => [HyperEdge("JOHN", ["_"], ["_"])],
-        "JOHN" => [HyperEdge("John", ["_"], ["3"]), HyperEdge("LOVES",["3"], ["_"])],
-        "LOVES" => [HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])],
-        "MARY" => [HyperEdge("Mary", ["_"], ["_"])]
+    rules = Dict{String, HyperGraph{String}}(
+        "S" => HyperGraph([HyperEdge("JOHN", ["_"], ["_"])]),
+        "JOHN" => HyperGraph([HyperEdge("John", ["_"], ["3"]), HyperEdge("LOVES",["3"], ["_"])]),
+        "LOVES" => HyperGraph([HyperEdge("loves", ["_"], ["4"]), HyperEdge("MARY", ["4"], ["_"])]),
+        "MARY" => HyperGraph([HyperEdge("Mary", ["_"], ["_"])])
     )
+
+    @test HRGVisualization._is_nonterminal("S") == true
+    @test HRGVisualization._is_nonterminal("JOHN") == true
+    @test HRGVisualization._is_nonterminal("loves") == false
+
+    nonterminals = HRGVisualization._get_nonterminals(rules["S"])
+    @test nonterminals == ["JOHN"]
+
+    nonterminals = HRGVisualization._get_nonterminals(rules["JOHN"])
+    @test nonterminals == ["LOVES"]
+
+    nonterminals = HRGVisualization._get_nonterminals(rules["LOVES"])
+    @test nonterminals == ["MARY"]
+
+    nonterminals = HRGVisualization._get_nonterminals(rules["MARY"])
+    @test nonterminals == []
+
+    @test HRGVisualization._order_keys(rules) == ["S", "JOHN", "LOVES", "MARY"]
+
     rules_dot = to_dot(rules)
     expected = """
     digraph HRG_Rules {
         rankdir=LR
         edge [arrowsize=0.5]
         subgraph cluster_1 {
-            label="JOHN ⇒"
-            rule1_n1[shape=point;label="";xlabel="3";fontsize=10]
-            rule1_n2_1[shape=circle;width=0.05;label=""]
-            rule1_n2_2[shape=circle;width=0.05;label=""]
-            rule1_he1[shape=box;label="John"]
-            rule1_he2[shape=box;label="LOVES"]
-            {rule1_n2_1} -> rule1_he1 -> {rule1_n1}
-            {rule1_n1} -> rule1_he2 -> {rule1_n2_2}
+            label="MARY ⇒"
+            rule1_n1_1[shape=circle;width=0.05;label=""]
+            rule1_n1_2[shape=circle;width=0.05;label=""]
+            rule1_he1[shape=box;label="Mary"]
+            {rule1_n1_1} -> rule1_he1 -> {rule1_n1_2}
         }
         subgraph cluster_2 {
             label="LOVES ⇒"
@@ -43,11 +59,14 @@ include("util.jl")
             {rule2_n1} -> rule2_he2 -> {rule2_n2_2}
         }
         subgraph cluster_3 {
-            label="MARY ⇒"
-            rule3_n1_1[shape=circle;width=0.05;label=""]
-            rule3_n1_2[shape=circle;width=0.05;label=""]
-            rule3_he1[shape=box;label="Mary"]
-            {rule3_n1_1} -> rule3_he1 -> {rule3_n1_2}
+            label="JOHN ⇒"
+            rule3_n1[shape=point;label="";xlabel="3";fontsize=10]
+            rule3_n2_1[shape=circle;width=0.05;label=""]
+            rule3_n2_2[shape=circle;width=0.05;label=""]
+            rule3_he1[shape=box;label="John"]
+            rule3_he2[shape=box;label="LOVES"]
+            {rule3_n2_1} -> rule3_he1 -> {rule3_n1}
+            {rule3_n1} -> rule3_he2 -> {rule3_n2_2}
         }
         subgraph cluster_4 {
             label="S ⇒"

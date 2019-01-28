@@ -43,8 +43,7 @@ include("util.jl")
 
     he3 = HyperEdge("Y", ["2", "4"], ["5"])
     he4 = HyperEdge("Z", ["5"], ["6", "7", "8"])
-    hg = HyperEdge[]
-    map(he -> push!(hg,he), [he1, he2, he3, he4])
+    hg = HyperGraph{String}(HyperEdge[he1, he2, he3, he4])
 
     hg_dot = to_dot(hg)
     expected = """
