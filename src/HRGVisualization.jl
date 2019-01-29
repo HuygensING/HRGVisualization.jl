@@ -20,7 +20,8 @@ module HRGVisualization
 export to_dot,
        HRGrammarRules,
        HyperEdge,
-       HyperGraph
+       HyperGraph,
+       display
 
 include("types.jl") # the type definitions should come from the main HRG module
 
@@ -107,6 +108,43 @@ function to_dot(rules::HRGrammarRules)
     }
     """
     return dot
+end
+
+import Base.display
+function display(mime::MIME"image/svg+xml", he::HyperEdge)
+    _display_svg(he)
+end
+
+function display(mime::MIME"image/png", he::HyperEdge)
+    _display_png(he)
+end
+
+function display(mime::MIME"image/svg+xml", hg::HyperGraph)
+    _display_svg(hg)
+end
+
+function display(mime::MIME"image/png", hg::HyperGraph)
+    _display_png(hg)
+end
+
+function display(mime::MIME"image/svg+xml", rules::HRGrammarRules)
+    _display_svg(rules)
+end
+
+function display(mime::MIME"image/png", rules::HRGrammarRules)
+    _display_png(rules)
+end
+
+function _display_svg(x)
+    file = "tmp.dot"
+    write(file,to_dot(x))
+    display("image/svg+xml", read(`dot -Tsvg $file`,String))
+end
+
+function _display_png(x)
+    file = "tmp.dot"
+    write(file,to_dot(x))
+    display("image/png", read(`dot -Tpng -Gfontname=Sans $file`))
 end
 
 function _hypergraph_as_dot(hg::HyperGraph, prefix::String="")
