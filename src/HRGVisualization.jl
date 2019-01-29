@@ -8,7 +8,11 @@
 # Examples
 
 ```jldoctest
-julia>
+julia>using HRGVisualization
+
+julia>he = HyperEdge("S", ["1"], ["2"])
+
+julia>dot = to_dot(he)
 ```
 """
 module HRGVisualization
