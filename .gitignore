@@ -4,3 +4,4 @@
 deps/deps.jl
 *.iml
 .idea
+.ipynb_checkpoints
